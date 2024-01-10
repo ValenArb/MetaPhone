@@ -1,7 +1,7 @@
 from cogs.Player import Player as Play
 
 def play_welcome():
-    dir = '/home/peima/FTP/test/Audios/Welcome.wav'
+    dir = '/home/peima/FTP/test/Audios/welcome.wav'
     Play(dir)
 
 def play_record():

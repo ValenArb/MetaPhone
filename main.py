@@ -55,7 +55,7 @@ def start_keypad():
             time.sleep(0.01)
             number.buf[0] = 11
 
-def welcome(tiempo_max = 27):
+def welcome(tiempo_max = 20):
     welcomer = Process(target=play_welcome)
     welcomer.start()
     key = SharedMemory(name="Memory", create=False)
@@ -68,31 +68,42 @@ def welcome(tiempo_max = 27):
         if tiempo >= end_time:# Fin de la sesión
             finish()
         elif keypad == 1:
+            j = False
             #random message
-            randomfile = random.choice(os.listdir("/home/peima/FTP/recordings"))
-            file = '/home/peima/FTP/recordings/' + randomfile
+            welcomer.terminate()
+            time.sleep(0.5)
+            randomfile = random.choice(os.listdir("/home/peima/FTP/test/recordings"))
+            file = '/home/peima/FTP/test/recordings/' + randomfile
             Play(file)
             print(f"Playing recording N°{randomfile}")
             finish()
         elif keypad == 2:
+            j = False
             #select code
-            playcode = Process(target=play_code)
-            playcode.start()
+            welcomer.terminate()
+            coder = Process(target=play_code)
+            coder.start()
             keypress = []
             starttime = time.time()
             endtime = starttime + 10
-            while endtime <= time.time():
+            tiempo = time.time()
+            while end_time >= time.time():
+                tiempo = time.time()
                 keypres = key.buf[0]
-                if keypad != 11:
+                if keypres != 11:
                     keypress.append(keypres)
             code = ''.join(map(str, keypress))+'.wav'
-            dir = os.listdir('/home/peima/FTP/recordings')
+            print(code)
+            dir = os.listdir('/home/peima/FTP/test/recordings')
             if code in dir:
+                coder.terminate()
                 Play(dir + '/' + code)
             finish()
             
         elif keypad == 3:
+            j = False
             #record message
+            welcomer.terminate()
             name = recordi(60)
             play_record_finish()
             starttime = time.time()
@@ -121,11 +132,14 @@ def finish():
 if __name__ == "__main__":
     keypad = Process(target=start_keypad)
     keypad.start()
-    inputs = Process(target=input, args=([4,23,24]))
-    inputs.start()
+    print("keypad")
+    # inputs = Process(target=input, args=([4,23,24]))
+    # inputs.start()
+    print("inputs")
     time.sleep(0.5)
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
+    mem.buf[4+6] = 0
     while True:
         if mem.buf[6+4] == 0 and hanged == 0:
             welcomer = Process(target=welcome)
