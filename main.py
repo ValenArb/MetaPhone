@@ -94,7 +94,7 @@ def welcome(tiempo_max = 20):
                 tiempo = time.time()
                 keypres = key.buf[0]
                 print(keypres)
-                if keypres != 11:
+                if keypres != 11: #FIXME hmmm idk a possible fix
                     keypress.append(keypres)
                     time.sleep(0.15)
             code = ''.join(map(str, keypress))+'.wav'
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     keypad.start()
     print("keypad")
     time.sleep(1)
-    inputs = Process(target=input, args=(4,), name = "Inputs")#23,24]))
+    inputs = Process(target=input, args=(4,), name = "Inputs")#23,24])) #TODO add input for movement sensors
     inputs.start()
     print("inputs")
     time.sleep(0.5)
@@ -149,6 +149,7 @@ if __name__ == "__main__":
     mem = SharedMemory(name = "Memory", create=False)
     while True:
         if mem.buf[6+4] == 0 and hanged == 0:
+            time.sleep(1) #FIXME set to 5-10 secons
             welcomer = Process(target=welcome)
             hanged = 1
             welcomer.start()
