@@ -5,12 +5,10 @@ import time
 
 def input(pins):
     button = SharedMemory(name= "Memory", create= False)
-    for pin in pins:
-        inputs = [DigitalInputDevice(pin = pin)for pin in pins]
-    for input in inputs:
-        while True:
+    input = DigitalInputDevice(pin = 4)#for pin in pins]
+    while True:
             time.sleep(0.1)
-            if input.value == True:
-                button.buf[6+int(inputs.pin)] = 1
+            if input.value == 1:
+                button.buf[6+int(str(input.pin)[4:])] = 1
             else:
-                button.buf[6+int(inputs.pin)] = 0
+                button.buf[6+int(str(input.pin)[4:])] = 0

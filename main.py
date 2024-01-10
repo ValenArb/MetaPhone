@@ -43,7 +43,7 @@ def recordi(timer = 60, recordmore = None):
 
 def start_keypad():
     """Start a new process to run the keyboard scanner."""
-    number = SharedMemory(name="Memory", create=True, size=100)
+    number = SharedMemory(name="Memory", create=True, size=1000)
     number.buf[0] = 11
     process = Process(target=Matrix)
     process.start()
@@ -52,11 +52,11 @@ def start_keypad():
         time.sleep(0.01)
         if number.buf[0] != 11:
             print(f"{number.buf[0]} has been pressed")
-            time.sleep(0.01)
+            time.sleep(0.005)
             number.buf[0] = 11
 
 def welcome(tiempo_max = 20):
-    welcomer = Process(target=play_welcome)
+    welcomer = Process(target=play_welcome, name= "Welcoming")
     welcomer.start()
     key = SharedMemory(name="Memory", create=False)
     start_time = time.time()
@@ -65,7 +65,9 @@ def welcome(tiempo_max = 20):
     while j == True:
         keypad = key.buf[0]
         tiempo = time.time()
-        if tiempo >= end_time:# Fin de la sesión
+        if tiempo >= end_time or key.buf[6+4] == 1:# Fin de la sesión
+            j = False
+            welcomer.terminate()
             finish()
         elif keypad == 1:
             j = False
@@ -79,21 +81,24 @@ def welcome(tiempo_max = 20):
             finish()
         elif keypad == 2:
             j = False
+            time.sleep(0.01)
             #select code
             welcomer.terminate()
             coder = Process(target=play_code)
             coder.start()
             keypress = []
             starttime = time.time()
-            endtime = starttime + 10
+            endtime = starttime + 3
             tiempo = time.time()
             while end_time >= time.time():
                 tiempo = time.time()
                 keypres = key.buf[0]
+                print(keypres)
                 if keypres != 11:
                     keypress.append(keypres)
+                    time.sleep(0.15)
             code = ''.join(map(str, keypress))+'.wav'
-            print(code)
+            print(type(code))
             dir = os.listdir('/home/peima/FTP/test/recordings')
             if code in dir:
                 coder.terminate()
@@ -121,25 +126,27 @@ def welcome(tiempo_max = 20):
 def finish():
     """Finish all process and play goodbye audio.""" 
     a = key = SharedMemory(name="Memory", create=False) 
-    if a.buf[6] == 0:
+    notkill = ["Keypad", "Inputs"]
+    if not a.buf[6] == 0:
         play_finish()
     for p in active_children():
-        p.terminate()
-        ...
-
+        if not p.name in notkill:
+            print(p.name)
+            
+            p.terminate()
 
 
 if __name__ == "__main__":
-    keypad = Process(target=start_keypad)
+    keypad = Process(target=start_keypad, name = "Keypad")
     keypad.start()
     print("keypad")
-    # inputs = Process(target=input, args=([4,23,24]))
-    # inputs.start()
+    time.sleep(1)
+    inputs = Process(target=input, args=(4,), name = "Inputs")#23,24]))
+    inputs.start()
     print("inputs")
     time.sleep(0.5)
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
-    mem.buf[4+6] = 0
     while True:
         if mem.buf[6+4] == 0 and hanged == 0:
             welcomer = Process(target=welcome)
@@ -150,5 +157,3 @@ if __name__ == "__main__":
             finish()
         if mem.buf[6+23] == 1 or mem.buf[6+24] == 1:
             print("movement has been detected!")
-
-            
