@@ -22,8 +22,8 @@ def play_record_finish():
     
 def play_digits(digit):
     dirs = ['cero.wav', 'uno.wav', 'dos.wav', 'tres.wav', 'cuatro.wav', 'cinco.wav', 'seis.wav', 'siete.wav','ocho.wav', 'nueve.wav']
-    # odir = '/home/peima/FTP/test/Audios/'
-    odir = 'C:/Users/Peima VM/Desktop/Metaphone/Audios/'
+    odir = '/home/peima/FTP/test/Audios/'   
+    # odir = 'C:/Users/Peima VM/Desktop/Metaphone/Audios/'
     dir = odir + dirs[digit]
     Play(dir)
 

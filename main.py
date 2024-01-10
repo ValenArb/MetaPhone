@@ -41,7 +41,7 @@ def recordi(timer = 60, recordmore = None):
     rec.save(name)
     return name
 
-def start_keypad(number):
+def start_keypad():
     """Start a new process to run the keyboard scanner."""
     number = SharedMemory(name="Memory", create=True, size=100)
     number.buf[0] = 11
