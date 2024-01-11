@@ -96,7 +96,7 @@ def recorder_main():
     play_record_finish()
     endtime = time.time() +3
     while endtime <= time.time():
-        if keypad == 1:
+        if keypad == 0:
             recordi(60, name)
         filenam = name.split('.')[0]
         digits = [int(d) for d in filenam if d.isdigit()]
@@ -153,13 +153,12 @@ if __name__ == "__main__":
     inputs = Process(target=input, args=(4,), name = "Inputs")#23,24])) #TODO add input for movement sensors
     inputs.start()
     print("inputs")
-    time.sleep(0.5)
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
     while True:
         if mem.buf[6+4] == 0 and hanged == 0:
             time.sleep(1) #FIXME set to 5-10 secons
-            welcomer = Process(target=welcome)
+            welcomer = Process(target=welcome) #TODO change the welcome. When started 5 seconds of cupaid tone
             hanged = 1
             welcomer.start()
         if mem.buf[6+4] == 1 and hanged == 1:
@@ -167,3 +166,11 @@ if __name__ == "__main__":
             finish()
         if mem.buf[6+23] == 1 or mem.buf[6+24] == 1:
             print("movement has been detected!")
+            
+#TODO SEARCH OCUUPIED TONE
+#TODO SEARCH OUT OF LINE TONE
+#TODO SEARCH CALLING LINE TONE
+#TODO WHEN FINISHED AND THANKED PLAY OCUPPIED TONE
+#TODO DURING DAYTIME NOT WORK
+#TODO GET ALL VARIABLES OF TIME ON A TXT or json or any other way that is apb
+

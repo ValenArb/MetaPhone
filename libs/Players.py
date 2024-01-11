@@ -1,4 +1,4 @@
-from libs.Sub_Libs.Player import Player as Play
+from libs.sub_libs.Player import Player as Play
 
 def play_welcome():
     dir = '/home/peima/FTP/test/Audios/welcome.wav'

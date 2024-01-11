@@ -1,6 +1,6 @@
 import pyaudio
 import wave
-from libs.Sub_Libs.ignore import noalsaerr, nojackerr
+from libs.sub_libs.ignore import noalsaerr, nojackerr
 
 def Player(file_name):
     # Make sure the user is reading a wav file
@@ -8,14 +8,17 @@ def Player(file_name):
         wf = wave.open(file_name + ".wav", "rb")
     else:
         wf = wave.open(file_name, "rb")
-    with noalsaerr():
+    try:
+        with noalsaerr():
+            pa = pyaudio.PyAudio()
+    except:
         pa = pyaudio.PyAudio()
     stream_out = pa.open(
         format = pa.get_format_from_width(wf.getsampwidth()),
         channels = wf.getnchannels(),
         rate = wf.getframerate(),
         output = True,
-        output_device_index = 1,
+        # output_device_index = 1,
         frames_per_buffer = 512
     )
     data = wf.readframes(512)
