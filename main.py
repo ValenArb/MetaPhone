@@ -55,6 +55,56 @@ def start_keypad():
             time.sleep(0.005)
             number.buf[0] = 11
 
+
+def random_main():
+    time.sleep(0.5)
+    randomfile = random.choice(os.listdir("/home/peima/FTP/test/recordings"))
+    file = '/home/peima/FTP/test/recordings/' + randomfile
+    Play(file)
+    return False
+
+def code_main():
+    coder = Process(target=play_code)
+    coder.start()
+    key = SharedMemory(name="Memory", create=False)
+    keypress = []
+    starttime = time.time()
+    endtime = starttime + 3
+    tiempo = time.time()
+    while endtime >= tiempo:
+        tiempo = time.time()
+        keypres = key.buf[0]
+        if keypres != 11:
+            keypress.append(keypres)
+            last = keypres
+            while keypres == last:
+                keypres = key.buf[0]
+                print(f"Not mapped {keypres}")
+    code = ''.join(map(str, keypress))+'.wav'
+    print(code)
+    dir = '/home/peima/FTP/test/recordings'
+    listdir = os.listdir('/home/peima/FTP/test/recordings')
+    if code in listdir:
+        coder.terminate()
+        Play(dir + '/' + code)
+    elif not code in listdir:
+        print("the code is incorrect! Please Re do your code")
+    return False
+
+def recorder_main():
+    name = recordi(60)
+    play_record_finish()
+    endtime = time.time() +3
+    while endtime <= time.time():
+        if keypad == 1:
+            recordi(60, name)
+        filenam = name.split('.')[0]
+        digits = [int(d) for d in filenam if d.isdigit()]
+        play_message_code()
+        for digit in digits:
+            play_digits(digit)
+            time.sleep(0.2)
+
 def welcome(tiempo_max = 20):
     welcomer = Process(target=play_welcome, name= "Welcoming")
     welcomer.start()
@@ -65,69 +115,28 @@ def welcome(tiempo_max = 20):
     while j == True:
         keypad = key.buf[0]
         tiempo = time.time()
-        if tiempo >= end_time or key.buf[6+4] == 1:# Fin de la sesión
+        if tiempo >= end_time or key.buf[6+4] == 1:
             j = False
             welcomer.terminate()
-            finish()
         elif keypad == 1:
-            j = False
-            #random message
             welcomer.terminate()
-            time.sleep(0.5)
-            randomfile = random.choice(os.listdir("/home/peima/FTP/test/recordings"))
-            file = '/home/peima/FTP/test/recordings/' + randomfile
-            Play(file)
-            print(f"Playing recording N°{randomfile}")
-            finish()
+            j = random_main()
         elif keypad == 2:
-            j = False
-            time.sleep(0.01)
-            #select code
             welcomer.terminate()
-            coder = Process(target=play_code)
-            coder.start()
-            keypress = []
-            starttime = time.time()
-            endtime = starttime + 3
-            tiempo = time.time()
-            while end_time >= time.time():
-                tiempo = time.time()
-                keypres = key.buf[0]
-                print(keypres)
-                if keypres != 11: #FIXME hmmm idk a possible fix
-                    keypress.append(keypres)
-                    time.sleep(0.15)
-            code = ''.join(map(str, keypress))+'.wav'
-            print(type(code))
-            dir = os.listdir('/home/peima/FTP/test/recordings')
-            if code in dir:
-                coder.terminate()
-                Play(dir + '/' + code)
-            finish()
-            
+            time.sleep(0.02)
+            j = code_main()
         elif keypad == 3:
             j = False
             #record message
             welcomer.terminate()
-            name = recordi(60)
-            play_record_finish()
-            starttime = time.time()
-            endtime = starttime +3
-            while endtime <= time.time():
-                if keypad == 1:
-                    recordi(60, name)
-            filenam = name.split('.')[0]
-            digits = [int(d) for d in filenam if d.isdigit()]
-            play_message_code()
-            for digit in digits:
-                play_digits(digit)
-                time.sleep(0.2)
-            finish()
+            j = recorder_main()
+    finish()
+
 def finish():
     """Finish all process and play goodbye audio.""" 
     a = key = SharedMemory(name="Memory", create=False) 
     notkill = ["Keypad", "Inputs"]
-    if not a.buf[6] == 0:
+    if a.buf[6+4] == 0:
         play_finish()
     for p in active_children():
         if not p.name in notkill:
