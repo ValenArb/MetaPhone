@@ -2,7 +2,7 @@ import pyaudio
 import wave
 import subprocess
 import os
-from cogs.ignore import noalsaerr
+from cogs.Sub_Libs.ignore import noalsaerr
 import shutil
 import threading
 
