@@ -8,14 +8,14 @@
 import time
 from multiprocessing import Process, active_children
 from multiprocessing.shared_memory import SharedMemory
-from cogs.Matrix import Matrix
-from cogs.Sub_Libs.Recorder import Recorder
-from cogs.Players import *
-from cogs.Signals import *
-from cogs.Player import Player as Play
+from libs.Matrix import Matrix
+from libs.Sub_Libs.Recorder import Recorder
+from libs.Players import *
+from libs.Signals import *
+from libs.Sub_Libs.Player import Player as Play
 import os
 import random
-from cogs.Sub_Libs.file import filename
+from libs.Sub_Libs.file import filename
 
 def recordi(timer = 60, recordmore = None):
     a = SharedMemory(name="Memory", create=False)

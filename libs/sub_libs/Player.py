@@ -1,6 +1,6 @@
 import pyaudio
 import wave
-from cogs.Sub_Libs.ignore import noalsaerr, nojackerr
+from libs.Sub_Libs.ignore import noalsaerr, nojackerr
 
 def Player(file_name):
     # Make sure the user is reading a wav file
