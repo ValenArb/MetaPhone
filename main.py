@@ -9,13 +9,13 @@ import time
 from multiprocessing import Process, active_children
 from multiprocessing.shared_memory import SharedMemory
 from libs.Matrix import Matrix
-from libs.Sub_Libs.Recorder import Recorder
+from libs.sub_libs.Recorder import Recorder
 from libs.Players import *
 from libs.Signals import *
-from libs.Sub_Libs.Player import Player as Play
+from libs.sub_libs.Player import Player as Play
 import os
 import random
-from libs.Sub_Libs.file import filename
+from libs.sub_libs.file import filename
 
 def recordi(timer = 60, recordmore = None):
     a = SharedMemory(name="Memory", create=False)
@@ -68,11 +68,8 @@ def code_main():
     coder.start()
     key = SharedMemory(name="Memory", create=False)
     keypress = []
-    starttime = time.time()
-    endtime = starttime + 3
-    tiempo = time.time()
-    while endtime >= tiempo:
-        tiempo = time.time()
+    endtime = time.time() + 10
+    while endtime >= time.time():
         keypres = key.buf[0]
         if keypres != 11:
             keypress.append(keypres)
@@ -109,13 +106,11 @@ def welcome(tiempo_max = 20):
     welcomer = Process(target=play_welcome, name= "Welcoming")
     welcomer.start()
     key = SharedMemory(name="Memory", create=False)
-    start_time = time.time()
-    end_time = start_time + tiempo_max
+    end_time = time.time() + tiempo_max
     j = True
     while j == True:
         keypad = key.buf[0]
-        tiempo = time.time()
-        if tiempo >= end_time or key.buf[6+4] == 1:
+        if time.time() >= end_time or key.buf[6+4] == 1:
             j = False
             welcomer.terminate()
         elif keypad == 1:
@@ -127,7 +122,6 @@ def welcome(tiempo_max = 20):
             j = code_main()
         elif keypad == 3:
             j = False
-            #record message
             welcomer.terminate()
             j = recorder_main()
     finish()
@@ -146,6 +140,7 @@ def finish():
 
 
 if __name__ == "__main__":
+    
     keypad = Process(target=start_keypad, name = "Keypad")
     keypad.start()
     print("keypad")
