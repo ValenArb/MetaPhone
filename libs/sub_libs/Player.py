@@ -1,6 +1,8 @@
 import pyaudio
 import wave
-from libs.sub_libs.ignore import noalsaerr, nojackerr
+# from libs.sub_libs.ignore import noalsaerr, nojackerr
+import numpy as np
+from variables import *
 
 def Player(file_name):
     # Make sure the user is reading a wav file
@@ -26,7 +28,10 @@ def Player(file_name):
     print("Playing Audio...")
     while len(data) > 0:
         # Play the audio file
-        stream_out.write(data)
+        npdata = np.frombuffer(data,dtype=np.int16)
+        npdata = (npdata * Volume_Multiplier).astype(np.int16)
+        newdata = npdata.tobytes()
+        stream_out.write(newdata)
         data = wf.readframes(512)
     stream_out.stop_stream()
     stream_out.close()
