@@ -12,6 +12,7 @@ from libs.Matrix import Matrix
 from libs.AudioManager import *
 from variables import *
 from libs.PhoneBell import ring
+from libs.sub_libs.Signals import *
 
 def start_keypad():
     """Start a new process to run the keyboard scanner."""
@@ -23,7 +24,7 @@ def start_keypad():
     while True:
         time.sleep(0.01)
         if number.buf[0] != 11:
-            play_tone(number.buf[0])
+            # play_tone(int(number.buf[0]))
             time.sleep(0.005)
             number.buf[0] = 11
 
@@ -44,25 +45,24 @@ def code_main(retry = True):
     if a == False and retry == True:
         code_main(False)
     if retry == False:
-        finish() 
+        finish(False) 
 
 def welcome():
-    audio_welcome()
-    options = Process(target=audio_options, name = "Options")
+    options = Process(target=audio_welcome, name = "Options")
     options.start()
     key = SharedMemory(name="Memory", create=False)
     end_time = time.time() + Max_Timeout_Start_Menu + 10
     j = True
     while j == True:
         keypad = key.buf[0]
-        if time.time() >= end_time or key.buf[6+4] == 1:
+        if time.time() >= end_time or key.buf[4] == 1:
             j = False
             options.terminate()
-        elif keypad == 1: #Record message
+        elif keypad == Send_Message_Key: #Record message
             j = False
             options.terminate()
             recorder_main()
-        elif keypad == 2: #Random message
+        elif keypad == Random_Message_Key: #Random message
             options.terminate()
             j = False
             time.sleep(0.5)
@@ -70,46 +70,70 @@ def welcome():
             time.sleep(0.5)
             audio_message()
             time.sleep(1)
-        elif keypad == 3: #Code message
+        elif keypad == Code_Message_Key: #Code message
             j = False
             options.terminate()
             code_main()
-    finish()
+    finish(False)
 
-def finish(kill = False):
+def finish(kill = True):
     """Finish all process and play goodbye audio.""" 
     key = SharedMemory(name="Memory", create=False) 
     notkill = ["Keypad", "Inputs", "Movement"]
-    if kill == True:
-        notkill.append("Finisher")
+    finishing = Process(target=audio_finish, name= "Finisher")
     if key.buf[4] == 0:
-        finishing = Process(target=audio_finish, name= "Finisher")
+        if kill == False:
+            notkill.append("Finisher")
         finishing.start()
-        time.sleep(3)
     for p in active_children():
         if not p.name in notkill:
             print(p.name)
             p.terminate()
-    finishing.join()
+    rotations = 0
+    if kill == False:
+        try:
+            finishing.join()
+        except: 
+            ...
+    while key.buf[4] == 0:
+        # rotations += 1
+        # if rotations != 4:
+        #     tone_busy()
+        #     time.sleep(1)
+        # else:
+            tone_ool()
+        
+        
 
 if __name__ == "__main__":
     keypad = Process(target=start_keypad, name = "Keypad")
     keypad.start()
     time.sleep(1)
     movement = Process(target = ring, name = "Movement")
+    hangup = Process(target = imput, name = "Inputs")
+    hangup.start()
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
+    mem.buf[1] = 1
+    mem.buf[2] = 1
+    mem.buf[4] = 1
     while True:
         if mem.buf[1] == 1:
             if mem.buf[2] == 1:
                 if mem.buf[4] == 0 and hanged == 0:
-                    tone_dialing(3, 1)
+                    j = 0
+                    while j <= 3:
+                        j+=1
+                        if mem.buf[4] == 1:
+                            break
+                        else:
+                            tone_dialing()
+                            time.sleep(0.5)
                     welcomer = Process(target=welcome)
                     hanged = 1
                     welcomer.start()
                 if mem.buf[4] == 1 and hanged == 1:
                     hanged = 0
-                    
                     finish(True)
             else:
                 while mem.buf[4] == 0:

@@ -8,7 +8,6 @@ def ring():
     movement = Process(target = input, args= [23, 24], name= "Inputs")
     movement.start()
     while True:
-        time.sleep(5)
         sensor1 = mem.buf[23]
         sensor2 = mem.buf[24]
         if sensor1 == 1 or sensor2 == 1:

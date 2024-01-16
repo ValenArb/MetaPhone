@@ -8,7 +8,7 @@ import threading
 
 class Recorder():
     #Defines sound properties like frequency and channels
-    def __init__(self, chunk=512, channels=2, rate=44100):
+    def __init__(self, chunk=512, channels=1, rate=44100):
         self.CHUNK = chunk
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = channels

@@ -20,7 +20,7 @@ def Player(file_name):
         channels = wf.getnchannels(),
         rate = wf.getframerate(),
         output = True,
-        # output_device_index = 1,
+        output_device_index = 1,
         frames_per_buffer = 512
     )
     data = wf.readframes(512)

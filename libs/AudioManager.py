@@ -7,17 +7,10 @@ import time
 import random
 import os
 
-def tone_dialing(times: int, space: int = 3):
-    """Plays the dialing tone
-    Args:
-        times (int): Amount of times dialing will be played
-        space (int, optional): time in seconds between tones. Defaults to 3.
-    """
-    while times != 0:
-        dir = '/home/peima/FTP/test/audio/tone/dial.wav'
-        Play(dir) 
-        times -= 1
-        time.sleep(space)
+def tone_dialing():
+    """Plays the dialing tone"""
+    dir = '/home/peima/FTP/test/audio/tone/dial.wav'
+    Play(dir) 
     return
 
 def tone_beep(times: int = 1, space: int = 1):
@@ -51,6 +44,7 @@ def audio_welcome():
     """Plays the welcome audio"""
     dir = '/home/peima/FTP/test/audio/general/0.wav'
     Play(dir)
+    audio_options()
     return
 
 def audio_options(space:int = 1):
@@ -62,7 +56,7 @@ def audio_options(space:int = 1):
     optionlist = ['send.wav','recieve.wav', 'code.wav']
     for option in optionlist:
         dir = '/home/peima/FTP/test/audio/options/'
-        Play(dir)
+        Play(dir + option)
         time.sleep(space)
     return
 
@@ -73,7 +67,7 @@ def audio_record(re = False):
         re (bool, optional): Option to re record audio. If True, will play the re record audio. Defaults to False.
     """
     if re == False:
-        dir = '/home/peima/FTP/test/audio/options'
+        dir = '/home/peima/FTP/test/audio/questions'
         file = random.choice(os.listdir(dir))
         dir = dir + '/' + file
     dir2 = '/home/peima/FTP/test/audio/general/1-1.wav'
@@ -98,10 +92,10 @@ def play_digits(digits: list):
     dirs = ['cero.wav', 'uno.wav', 'dos.wav', 'tres.wav', 'cuatro.wav', 'cinco.wav', 'seis.wav', 'siete.wav','ocho.wav', 'nueve.wav']
     odir = '/home/peima/FTP/test/audio/numbers/'
     for digit in digits:
-        dir = odir + dirs[digit]
+        dir = odir + dirs[int(digit)]
         Play(dir)
         time.sleep(0.5)
-    return
+
 
 def audio_recive():
     """Plays the recive message audio"""
@@ -109,10 +103,10 @@ def audio_recive():
     Play(dir)
     return
     
-def play_tone(number):
-    dirs = ['tone0', 'tone1', 'tone2', 'tone3', 'tone4', 'tone5', 'tone6', 'tone7', 'tone8', 'tone9']
+def play_tone(number: int):
+    dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
     odir = '/home/peima/FTP/test/audio/general/tone/number/'  
-    dir = odir + dir[number]
+    dir = odir + dirs[number]
     Play(dir)
     return
     
@@ -129,17 +123,14 @@ def audio_message(code: str = None):
     dir = '/home/peima/FTP/test/recordings'
     listdir = os.listdir(dir)
     if code == None:
-        dir2= '/home/peima/FTP/test/audio/general/1-3.wav'
         code = random.choice(listdir)
-        code = dir + '/' + code
-        Play(dir2)
     else:
         if not code in listdir:
             Play(notfound)
             return False
     tone_beep()
     time.sleep(0.1)
-    Play(code)
+    Play(dir + '/' + code)
     return True
 
 def audio_code():
@@ -167,11 +158,11 @@ def record(max_time = 60, name: str = None):
         f = a.buf[0]
         if time.time() >= finish_time:
             j = False
-        elif f == 1:
+        elif f == Stop_Record_Key:
             j = False
     rec.stop()
     rec.save(str(name))
-    return str(name)
+    return name
 
 def recorder_main(again = False, name = None):
     audio_record(again)
@@ -191,7 +182,8 @@ def recorder_main(again = False, name = None):
     time.sleep(0.5)
     audio_record_finish()
     time.sleep(0.5)
-    play_digits(int(name))
+    print(name)
+    play_digits(list(str(name)))
     time.sleep(1)
     audio_recive()
     time.sleep(0.5)

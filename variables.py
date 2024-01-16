@@ -7,5 +7,13 @@ Max_Timeout_Record_Menu = 5 #BASE ---> 5 seconds
 # ↑ ↑ ↑ Tiempo maximo en que si el usuario no aprieta 9 al terminar de grabar lo lleva a la finalizacion de la grabacion
 Max_Timeout_Code_Keypress = 10
 # ↑ ↑ ↑ Tiempo maximo para el ingreso del codigo. Cualquie tecla presionada durante este tiempo se guarda
-Volume_Multiplier = 3 #Number in 100%
+Volume_Multiplier = 3 #Multiplier
+
+Send_Message_Key = 1
+
+Random_Message_Key = 2
+
+Code_Message_Key = 3
+
+Stop_Record_Key = 0 # Key pressed to stop the recording
 
