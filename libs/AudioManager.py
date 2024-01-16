@@ -2,7 +2,7 @@ from libs.sub_libs.Player import Player as Play
 from multiprocessing.shared_memory import SharedMemory
 from libs.sub_libs.Recorder import Recorder
 from libs.sub_libs.file import filename
-from libs.sub_libs.variables import *
+from variables import *
 import time
 import random
 import os
@@ -125,6 +125,7 @@ def audio_message(code: str = None):
     Returns:
         False: The code given doesn't exist
     """
+    notfound = '/home/peima/FTP/test/audio/general/3-2.wav'
     dir = '/home/peima/FTP/test/recordings'
     listdir = os.listdir(dir)
     if code == None:
@@ -133,16 +134,15 @@ def audio_message(code: str = None):
         code = dir + '/' + code
         Play(dir2)
     else:
-        code = code + '.wav'
         if not code in listdir:
-            code = ''
+            Play(notfound)
             return False
     tone_beep()
     time.sleep(0.1)
     Play(code)
     return True
 
-def audio_code_retry():
+def audio_code():
     dir = '/home/peima/FTP/test/audio/general/3-1.wav' 
     Play(dir) 
     return    

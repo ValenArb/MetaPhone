@@ -10,10 +10,8 @@ from multiprocessing import Process, active_children
 from multiprocessing.shared_memory import SharedMemory
 from libs.Matrix import Matrix
 from libs.AudioManager import *
-from libs.sub_libs.variables import *
+from variables import *
 from libs.PhoneBell import ring
-
-
 
 def start_keypad():
     """Start a new process to run the keyboard scanner."""
@@ -29,23 +27,24 @@ def start_keypad():
             time.sleep(0.005)
             number.buf[0] = 11
 
-def code_main():
-    audio = Process(target=Audio)
+def code_main(retry = True):
+    audio_code()
     key = SharedMemory(name="Memory", create=False)
     keypress = []
-    endtime = time.time() + 10
+    endtime = time.time() + Max_Timeout_Code_Keypress
     while endtime >= time.time():
-        keypres = key.buf[0]
-        if keypres != 11:
-            keypress.append(keypres)
-            last = keypres
-            while keypres == last:
-                keypres = key.buf[0]
-    code = ''.join(map(str, keypress))+'.wav'
-    value = audio_message(code)
-    if value == False:
-        code_main()
-
+        keypad = key.buf[0]
+        if keypad != 11:
+            keypress.append(keypad)
+            last = keypad
+            while keypad == last:
+                keypad = key.buf[0]
+    code = ''.join(map(str, keypress)) + '.wav'
+    a = audio_message(code)    
+    if a == False and retry == True:
+        code_main(False)
+    if retry == False:
+        finish() 
 
 def welcome():
     audio_welcome()
@@ -59,7 +58,6 @@ def welcome():
         if time.time() >= end_time or key.buf[6+4] == 1:
             j = False
             options.terminate()
-            finish()
         elif keypad == 1: #Record message
             j = False
             options.terminate()
@@ -72,7 +70,6 @@ def welcome():
             time.sleep(0.5)
             audio_message()
             time.sleep(1)
-            finish()
         elif keypad == 3: #Code message
             j = False
             options.terminate()

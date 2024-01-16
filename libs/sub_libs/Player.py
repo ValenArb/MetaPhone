@@ -1,6 +1,6 @@
 import pyaudio
 import wave
-# from libs.sub_libs.ignore import noalsaerr, nojackerr
+from libs.sub_libs.ignore import noalsaerr, nojackerr
 import numpy as np
 from variables import *
 
