@@ -8,12 +8,14 @@ Max_Timeout_Record_Menu = 5 #BASE ---> 5 seconds
 Max_Timeout_Code_Keypress = 10
 # ↑ ↑ ↑ Tiempo maximo para el ingreso del codigo. Cualquie tecla presionada durante este tiempo se guarda
 Volume_Multiplier = 3 #Multiplier
-
+# ↑ ↑ ↑ Multiplicador de volumen para el parlante
 Send_Message_Key = 1
-
+# ↑ ↑ ↑ Tecla usada para enviar mensaje
 Random_Message_Key = 2
-
+# ↑ ↑ ↑ Tecla usada para recibir un mensaje aleatorio
 Code_Message_Key = 3
-
-Stop_Record_Key = 0 # Key pressed to stop the recording
-
+# ↑ ↑ ↑ Tecla usada para ingresar un codigo
+Stop_Record_Key = 0
+# ↑ ↑ ↑ Tecla usada para detener la grabacion
+Retry_Record_Key = 9
+# ↑ ↑ ↑ Tecla usada para reintentar la grabacion

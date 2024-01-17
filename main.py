@@ -7,6 +7,7 @@
 
 import time
 from multiprocessing import Process, active_children
+import random
 from multiprocessing.shared_memory import SharedMemory
 from libs.Matrix import Matrix
 from libs.AudioManager import *
@@ -24,8 +25,7 @@ def start_keypad():
     while True:
         time.sleep(0.01)
         if number.buf[0] != 11:
-            # play_tone(int(number.buf[0]))
-            time.sleep(0.005)
+            time.sleep(0.0005)
             number.buf[0] = 11
 
 def code_main(retry = True):
@@ -33,14 +33,18 @@ def code_main(retry = True):
     key = SharedMemory(name="Memory", create=False)
     keypress = []
     endtime = time.time() + Max_Timeout_Code_Keypress
+    tone_beep()
     while endtime >= time.time():
         keypad = key.buf[0]
+        last = 11
         if keypad != 11:
             keypress.append(keypad)
             last = keypad
             while keypad == last:
                 keypad = key.buf[0]
+                key.buf[0] = 11
     code = ''.join(map(str, keypress)) + '.wav'
+    print(code)
     a = audio_message(code)    
     if a == False and retry == True:
         code_main(False)
@@ -122,7 +126,9 @@ if __name__ == "__main__":
             if mem.buf[2] == 1:
                 if mem.buf[4] == 0 and hanged == 0:
                     j = 0
-                    while j <= 3:
+                    i = random.randint(2, 5)
+                    i = 0
+                    while j <= i:
                         j+=1
                         if mem.buf[4] == 1:
                             break
@@ -140,7 +146,4 @@ if __name__ == "__main__":
                     tone_ool()
         else:
             ... #TODO Code that copies the 'recordings' folder and 'timely.txt' to a pendrive. If 'timely.txt' in pendrive copies it and reboots the system
-            
-#TODO WHEN FINISHED AND THANKED PLAY OCUPPIED TONE
-#TODO GET ALL VARIABLES OF TIME ON A TXT or json or any other way that is apb
 

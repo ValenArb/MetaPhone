@@ -13,22 +13,10 @@ def tone_dialing():
     Play(dir) 
     return
 
-def tone_beep(times: int = 1, space: int = 1):
-    """Play the beep tone
-
-    Args:
-        times (int): Amout of times the tone will be played
-        space (int, optional): time in seconds between tones. Defaults to 1.
-    """
+def tone_beep():
+    """Play the beep tone"""
     dir = '/home/peima/FTP/test/audio/tone/beep.wav'
-    if not times == 1:
-        while times != 0:
-            Play(dir)
-            times -= 1
-            time.sleep(space)
-    else:
-        Play(dir)
-    return
+    Play(dir)
 
 def tone_ool():
     dir = '/home/peima/FTP/test/audio/tone/off-hook.wav'
@@ -126,6 +114,8 @@ def audio_message(code: str = None):
         code = random.choice(listdir)
     else:
         if not code in listdir:
+            print(code)
+            print(listdir)
             Play(notfound)
             return False
     tone_beep()
@@ -149,17 +139,20 @@ def record(max_time = 60, name: str = None):
     a = SharedMemory(name="Memory", create=False)
     j = True
     rec = Recorder()
-    finish_time = time.time() + max_time
     tone_beep()
     rec.start()
     if name == None:
         name = filename()
+    finish_time = time.time() + max_time
     while j == True:
         f = a.buf[0]
         if time.time() >= finish_time:
             j = False
         elif f == Stop_Record_Key:
             j = False
+        elif a.buf[4] == 1:
+            rec.stop()
+            rec.save(str(name))
     rec.stop()
     rec.save(str(name))
     return name
@@ -174,7 +167,7 @@ def recorder_main(again = False, name = None):
         audio_re_record()
         endtime = time.time() + Max_Timeout_Record_Menu
         while j == True:
-            if key.buf[0] == 9:
+            if key.buf[0] == Retry_Record_Key:
                 j = False
                 recorder_main(again = True, name = name)
             elif endtime >= time.time():

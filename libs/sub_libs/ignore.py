@@ -15,10 +15,3 @@ def noalsaerr():
     asound.snd_lib_error_set_handler(c_error_handler)
     yield
     asound.snd_lib_error_set_handler(None)
-    
-@contextmanager
-def nojackerr():
-    jack = cdll.LoadLibrary('libjack.so')
-    jack.jack_set_error_function(c_error_handler)
-    yield
-    jack.jack_set_error_function(None)
