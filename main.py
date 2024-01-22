@@ -25,6 +25,7 @@ def start_keypad():
     while True:
         time.sleep(0.01)
         if number.buf[0] != 11:
+            play_tone(number.buf[0])
             time.sleep(0.0005)
             number.buf[0] = 11
 
@@ -114,16 +115,16 @@ if __name__ == "__main__":
     keypad.start()
     time.sleep(1)
     movement = Process(target = ring, name = "Movement")
-    hangup = Process(target = imput, name = "Inputs")
+    hangup = Process(target = imput, name = "Inputs", args=[4,17,27])
     hangup.start()
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
-    mem.buf[1] = 1
-    mem.buf[2] = 1
+    mem.buf[17] = 1
+    mem.buf[27] = 1
     mem.buf[4] = 1
     while True:
-        if mem.buf[1] == 1:
-            if mem.buf[2] == 1:
+        if mem.buf[17] == 1:
+            if mem.buf[27] == 1:
                 if mem.buf[4] == 0 and hanged == 0:
                     j = 0
                     i = random.randint(2, 5)
@@ -145,5 +146,8 @@ if __name__ == "__main__":
                 while mem.buf[4] == 0:
                     tone_ool()
         else:
-            ... #TODO Code that copies the 'recordings' folder and 'timely.txt' to a pendrive. If 'timely.txt' in pendrive copies it and reboots the system
+            while mem.buf[17] == 0:
+                source_dir = ...
+                ...
+            ... #TODO Code that copies the 'recordings' folder and 'variables.py' to a pendrive. If 'timely.txt' in pendrive copies it and reboots the system
 

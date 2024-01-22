@@ -9,28 +9,28 @@ import os
 
 def tone_dialing():
     """Plays the dialing tone"""
-    dir = '/home/peima/FTP/test/audio/tone/dial.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/tone/dial.wav'
     Play(dir) 
     return
 
 def tone_beep():
     """Play the beep tone"""
-    dir = '/home/peima/FTP/test/audio/tone/beep.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/tone/beep.wav'
     Play(dir)
 
 def tone_ool():
-    dir = '/home/peima/FTP/test/audio/tone/off-hook.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/tone/off-hook.wav'
     Play(dir)
     return
 
 def tone_busy():
-    dir = '/home/peima/FTP/test/audio/tone/busy.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/tone/busy.wav'
     Play(dir)
     return
 
 def audio_welcome():
     """Plays the welcome audio"""
-    dir = '/home/peima/FTP/test/audio/general/0.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/Bienvenida.wav'
     Play(dir)
     audio_options()
     return
@@ -41,9 +41,9 @@ def audio_options(space:int = 1):
     Args:
         space (int, optional): Time in seconds between audios. Defaults to 1.
     """ 
-    optionlist = ['send.wav','recieve.wav', 'code.wav']
+    optionlist = ['Send.wav','Recieve.wav', 'Code.wav']
     for option in optionlist:
-        dir = '/home/peima/FTP/test/audio/options/'
+        dir = '/home/FuegoAustral/Metaphone/Audios/Opciones/'
         Play(dir + option)
         time.sleep(space)
     return
@@ -55,10 +55,10 @@ def audio_record(re = False):
         re (bool, optional): Option to re record audio. If True, will play the re record audio. Defaults to False.
     """
     if re == False:
-        dir = '/home/peima/FTP/test/audio/questions'
+        dir = '/home/FuegoAustral/Metaphone/Audios/Preguntas'
         file = random.choice(os.listdir(dir))
         dir = dir + '/' + file
-    dir2 = '/home/peima/FTP/test/audio/general/1-1.wav'
+    dir2 = '/home/FuegoAustral/Metaphone/Audios/General/Grabacion.wav'
     Play(dir)
     time.sleep(0.5)
     Play(dir2)
@@ -66,19 +66,19 @@ def audio_record(re = False):
 
 def audio_re_record():
     """Plays the re record message"""
-    dir = '/home/peima/FTP/test/audio/general/1-1-1.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/FinGrabar.wav'
     Play(dir) 
     return
 
 def audio_record_finish():
     """Plays the recording finished message"""
-    dir = '/home/peima/FTP/test/audio/general/1-2.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/Enviado.wav'
     Play(dir) 
     return
 
 def play_digits(digits: list):
     dirs = ['cero.wav', 'uno.wav', 'dos.wav', 'tres.wav', 'cuatro.wav', 'cinco.wav', 'seis.wav', 'siete.wav','ocho.wav', 'nueve.wav']
-    odir = '/home/peima/FTP/test/audio/numbers/'
+    odir = '/home/FuegoAustral/Metaphone/Audios/Numeros/'
     for digit in digits:
         dir = odir + dirs[int(digit)]
         Play(dir)
@@ -87,13 +87,13 @@ def play_digits(digits: list):
 
 def audio_recive():
     """Plays the recive message audio"""
-    dir = '/home/peima/FTP/test/audio/general/1-3.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/Recibir.wav'
     Play(dir)
     return
     
 def play_tone(number: int):
     dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
-    odir = '/home/peima/FTP/test/audio/general/tone/number/'  
+    odir = '/home/FuegoAustral/Metaphone/Audioss/tone/number/'  
     dir = odir + dirs[number]
     Play(dir)
     return
@@ -107,7 +107,7 @@ def audio_message(code: str = None):
     Returns:
         False: The code given doesn't exist
     """
-    notfound = '/home/peima/FTP/test/audio/general/3-2.wav'
+    notfound = '/home/FuegoAustral/Metaphone/Audios/General/NoCode.wav'
     dir = '/home/peima/FTP/test/recordings'
     listdir = os.listdir(dir)
     if code == None:
@@ -124,13 +124,13 @@ def audio_message(code: str = None):
     return True
 
 def audio_code():
-    dir = '/home/peima/FTP/test/audio/general/3-1.wav' 
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/Ingrese.wav' 
     Play(dir) 
     return    
 
 def audio_finish():
     """Plays the finishing audio"""
-    dir = '/home/peima/FTP/test/audio/general/4.wav'
+    dir = '/home/FuegoAustral/Metaphone/Audios/General/Salir.wav'
     Play(dir) 
     return
 
@@ -172,12 +172,12 @@ def recorder_main(again = False, name = None):
                 recorder_main(again = True, name = name)
             elif endtime >= time.time():
                 j = False
-    time.sleep(0.5)
-    audio_record_finish()
-    time.sleep(0.5)
-    print(name)
-    play_digits(list(str(name)))
-    time.sleep(1)
-    audio_recive()
-    time.sleep(0.5)
-    audio_message()
+        time.sleep(0.5)
+        audio_record_finish()
+        time.sleep(0.5)
+        print(name)
+        play_digits(list(str(name)))
+        time.sleep(1)
+        audio_recive()
+        time.sleep(0.5)
+        audio_message()
