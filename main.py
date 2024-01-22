@@ -115,7 +115,7 @@ if __name__ == "__main__":
     keypad.start()
     time.sleep(1)
     movement = Process(target = ring, name = "Movement")
-    hangup = Process(target = imput, name = "Inputs", args=([4,17,27]))
+    hangup = Process(target = imput, name = "Inputs", args=(4,17,27))
     hangup.start()
     hanged = 0
     mem = SharedMemory(name = "Memory", create=False)
