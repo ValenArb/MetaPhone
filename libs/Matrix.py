@@ -3,8 +3,8 @@ from gpiozero import DigitalOutputDevice, DigitalInputDevice
 import time
 def Matrix():
     key = SharedMemory(name="Memory", create=False)
-    col_pins = [7, 8, 25]
-    row_pins = [21, 20, 16, 12]
+    col_pins = [20, 26, 21]
+    row_pins = [16, 7, 8, 25]
     keys = [
         [1, 2, 3],
         [4, 5, 6],

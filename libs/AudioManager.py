@@ -35,7 +35,7 @@ def audio_welcome():
     audio_options()
     return
 
-def audio_options(space:int = 1):
+def audio_options(space:int = 0.2):
     """Plays the 3 audios related to options
 
     Args:
@@ -93,7 +93,7 @@ def audio_recive():
     
 def play_tone(number: int):
     dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
-    odir = '/home/FuegoAustral/Metaphone/Audioss/tone/number/'  
+    odir = '/home/FuegoAustral/Metaphone/Audios/tone/number/'  
     dir = odir + dirs[number]
     Play(dir)
     return
@@ -150,7 +150,7 @@ def record(max_time = 60, name: str = None):
             j = False
         elif f == Stop_Record_Key:
             j = False
-        elif a.buf[4] == 1:
+        elif a.buf[6] == 1:
             rec.stop()
             rec.save(str(name))
     rec.stop()

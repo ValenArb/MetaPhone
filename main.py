@@ -12,12 +12,12 @@ from multiprocessing.shared_memory import SharedMemory
 from libs.Matrix import Matrix
 from libs.AudioManager import *
 from variables import *
-from libs.PhoneBell import ring
+from libs.PhoneBell import *
 from libs.sub_libs.Signals import *
 
 def start_keypad():
     """Start a new process to run the keyboard scanner."""
-    number = SharedMemory(name="Memory", create=True, size=1000)
+    number = SharedMemory(name="Memory", create=False)
     number.buf[0] = 11
     process = Process(target=Matrix)
     process.start()
@@ -53,23 +53,32 @@ def code_main(retry = True):
         finish(False) 
 
 def welcome():
-    options = Process(target=audio_welcome, name = "Options")
-    options.start()
+    welcome = Process(target=audio_welcome, name = "Options")
+    welcome.start()
     key = SharedMemory(name="Memory", create=False)
     end_time = time.time() + Max_Timeout_Start_Menu + 10
     j = True
     while j == True:
         keypad = key.buf[0]
-        if time.time() >= end_time or key.buf[4] == 1:
+        if time.time() >= end_time or key.buf[6] == 1:
             j = False
-            options.terminate()
+            try:
+                welcome.terminate()
+            except:
+                continue
         elif keypad == Send_Message_Key: #Record message
             j = False
-            options.terminate()
+            try:
+                welcome.terminate()
+            except:
+                continue
             recorder_main()
         elif keypad == Random_Message_Key: #Random message
-            options.terminate()
             j = False
+            try:
+                welcome.terminate()
+            except:
+                continue
             time.sleep(0.5)
             audio_recive()
             time.sleep(0.5)
@@ -77,16 +86,19 @@ def welcome():
             time.sleep(1)
         elif keypad == Code_Message_Key: #Code message
             j = False
-            options.terminate()
+            try:
+                welcome.terminate() 
+            except:
+                continue
             code_main()
     finish(False)
 
 def finish(kill = True):
     """Finish all process and play goodbye audio.""" 
     key = SharedMemory(name="Memory", create=False) 
-    notkill = ["Keypad", "Inputs", "Movement"]
+    notkill = ["Keypad", "Inputs", "Movement", "Positions"]
     finishing = Process(target=audio_finish, name= "Finisher")
-    if key.buf[4] == 0:
+    if key.buf[6] == 0:
         if kill == False:
             notkill.append("Finisher")
         finishing.start()
@@ -94,13 +106,12 @@ def finish(kill = True):
         if not p.name in notkill:
             print(p.name)
             p.terminate()
-    rotations = 0
     if kill == False:
         try:
             finishing.join()
         except: 
             ...
-    while key.buf[4] == 0:
+    while key.buf[6] == 0:
         # rotations += 1
         # if rotations != 4:
         #     tone_busy()
@@ -111,43 +122,39 @@ def finish(kill = True):
         
 
 if __name__ == "__main__":
+    mem = SharedMemory(name = "Memory", create=True, size = 1000)
     keypad = Process(target=start_keypad, name = "Keypad")
     keypad.start()
     time.sleep(1)
     movement = Process(target = ring, name = "Movement")
-    hangup = Process(target = imput, name = "Inputs", args=(4,17,27))
+    hangup = Process(target = imput, name = "Inputs", args=(6,23,24,11,5))
+    position = Process(target = select, name = "Positions")
     hangup.start()
+    position.start()
     hanged = 0
-    mem = SharedMemory(name = "Memory", create=False)
-    mem.buf[17] = 1
-    mem.buf[27] = 1
-    mem.buf[4] = 1
+    mem.buf[40] = 1 #position of X
+    mem.buf[6] = 1
     while True:
-        if mem.buf[17] == 1:
-            if mem.buf[27] == 1:
-                if mem.buf[4] == 0 and hanged == 0:
-                    j = 0
-                    i = random.randint(2, 5)
-                    i = 0
-                    while j <= i:
-                        j+=1
-                        if mem.buf[4] == 1:
-                            break
-                        else:
-                            tone_dialing()
-                            time.sleep(0.5)
-                    welcomer = Process(target=welcome)
-                    hanged = 1
-                    welcomer.start()
-                if mem.buf[4] == 1 and hanged == 1:
-                    hanged = 0
-                    finish(True)
-            else:
-                while mem.buf[4] == 0:
-                    tone_ool()
+        if mem.buf[40] == 0:
+            if mem.buf[6] == 0 and hanged == 0:
+                j = 0
+                i = random.randint(2, 5)
+                i = 0 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
+                while j <= i:
+                    j+=1
+                    if mem.buf[6] == 1:
+                        break
+                    else:
+                        tone_dialing()
+                        time.sleep(0.5) 
+                welcomer = Process(target=welcome)
+                hanged = 1
+                welcomer.start()
+            if mem.buf[6] == 1 and hanged == 1:
+                hanged = 0
+                finish(True)
+        elif mem.buf[40] == 0:
+            while mem.buf[6] == 0:
+                tone_ool()
         else:
-            while mem.buf[17] == 0:
-                source_dir = ...
-                ...
-            ... #TODO Code that copies the 'recordings' folder and 'variables.py' to a pendrive. If 'timely.txt' in pendrive copies it and reboots the system
-
+            ...
