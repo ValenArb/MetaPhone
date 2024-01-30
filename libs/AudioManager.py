@@ -150,7 +150,7 @@ def record(max_time = 60, name: str = None):
             j = False
         elif f == Stop_Record_Key:
             j = False
-        elif a.buf[6] == 1:
+        elif a.buf[11] == 1:
             rec.stop()
             rec.save(str(name))
     rec.stop()

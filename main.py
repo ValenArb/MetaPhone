@@ -60,7 +60,7 @@ def welcome():
     j = True
     while j == True:
         keypad = key.buf[0]
-        if time.time() >= end_time or key.buf[6] == 1:
+        if time.time() >= end_time or key.buf[11] == 1:
             j = False
             try:
                 welcome.terminate()
@@ -98,7 +98,7 @@ def finish(kill = True):
     key = SharedMemory(name="Memory", create=False) 
     notkill = ["Keypad", "Inputs", "Movement", "Positions"]
     finishing = Process(target=audio_finish, name= "Finisher")
-    if key.buf[6] == 0:
+    if key.buf[11] == 0:
         if kill == False:
             notkill.append("Finisher")
         finishing.start()
@@ -111,7 +111,7 @@ def finish(kill = True):
             finishing.join()
         except: 
             ...
-    while key.buf[6] == 0:
+    while key.buf[11] == 0:
         # rotations += 1
         # if rotations != 4:
         #     tone_busy()
@@ -127,22 +127,22 @@ if __name__ == "__main__":
     keypad.start()
     time.sleep(1)
     movement = Process(target = ring, name = "Movement")
-    hangup = Process(target = imput, name = "Inputs", args=(6,23,24,11,5))
+    hangup = Process(target = imput, name = "Inputs", args=(5,23,24,11,6))
     position = Process(target = select, name = "Positions")
     hangup.start()
     position.start()
     hanged = 0
-    mem.buf[40] = 1 #position of X
-    mem.buf[6] = 1
+    mem.buf[40] = 0 #position of X
+    mem.buf[11] = 1
     while True:
         if mem.buf[40] == 0:
-            if mem.buf[6] == 0 and hanged == 0:
+            if mem.buf[11] == 0 and hanged == 0:
                 j = 0
                 i = random.randint(2, 5)
                 i = 0 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
                 while j <= i:
                     j+=1
-                    if mem.buf[6] == 1:
+                    if mem.buf[11] == 1:
                         break
                     else:
                         tone_dialing()
@@ -150,11 +150,11 @@ if __name__ == "__main__":
                 welcomer = Process(target=welcome)
                 hanged = 1
                 welcomer.start()
-            if mem.buf[6] == 1 and hanged == 1:
+            if mem.buf[11] == 1 and hanged == 1:
                 hanged = 0
                 finish(True)
         elif mem.buf[40] == 0:
-            while mem.buf[6] == 0:
+            while mem.buf[11] == 0:
                 tone_ool()
         else:
             ...

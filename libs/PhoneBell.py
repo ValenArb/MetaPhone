@@ -12,14 +12,14 @@ def ring():
             cycle = 0
             while cycle < 5:
                 output(18, True)
-                if mem.buf[6] == 0:
+                if mem.buf[11] == 0:
                     cycle == 60
                 else:
                     time.sleep(3)
                     output(18, False)
                     time.sleep(1)
                     cycle += 1
-        if mem.buf[6] == 1:
+        if mem.buf[11] == 1:
             output(17, True)
         else:
             output(17, False)
@@ -27,7 +27,7 @@ def ring():
 def select():
     mem = SharedMemory(name="Memory", create = False)
     while True:
-        poscion1 = mem.buf[11]
+        poscion1 = mem.buf[6]
         poscion2 = mem.buf[5]
         if poscion1 == 0 and poscion2 == 0:
             mem.buf[40] = 1
