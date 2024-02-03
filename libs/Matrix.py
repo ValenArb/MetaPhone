@@ -27,7 +27,7 @@ def Matrix():
                         stop_time = time.time()
                         pressed_time = stop_time - start_time
                         if pressed_time >= 0.03:
-                            # print(f"Key pressed: {keys[j][i]}")
+                            print(f"Key pressed: {keys[j][i]}")
                             key.buf[0] = int(keys[j][i])
                         else: 
                             continue

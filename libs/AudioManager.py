@@ -77,7 +77,7 @@ def audio_record_finish():
     return
 
 def play_digits(digits: list):
-    dirs = ['cero.wav', 'uno.wav', 'dos.wav', 'tres.wav', 'cuatro.wav', 'cinco.wav', 'seis.wav', 'siete.wav','ocho.wav', 'nueve.wav']
+    dirs = ['5-0.wav', '5-1.wav', '5-2.wav', '5-3.wav', '5-4.wav', '5-5.wav', '5-6.wav', '5-7.wav','5-8.wav', '5-9.wav']
     odir = '/home/FuegoAustral/Metaphone/Audios/Numeros/'
     for digit in digits:
         dir = odir + dirs[int(digit)]

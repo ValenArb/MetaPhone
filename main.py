@@ -25,7 +25,8 @@ def start_keypad():
     while True:
         time.sleep(0.01)
         if number.buf[0] != 11:
-            play_tone(number.buf[0])
+            # play_tone(number.buf[0])
+            print(number.buf[0])
             time.sleep(0.0005)
             number.buf[0] = 11
 
