@@ -154,8 +154,6 @@ if __name__ == "__main__":
             if mem.buf[11] == 1 and hanged == 1:
                 hanged = 0
                 finish(True)
-        elif mem.buf[40] == 0:
+        elif mem.buf[40] == 1:
             while mem.buf[11] == 0:
                 tone_ool()
-        else:
-            ...

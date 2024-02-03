@@ -23,6 +23,7 @@ def tone_ool():
     Play(dir)
     return
 
+
 def tone_busy():
     dir = '/home/FuegoAustral/Metaphone/Audios/tone/busy.wav'
     Play(dir)
