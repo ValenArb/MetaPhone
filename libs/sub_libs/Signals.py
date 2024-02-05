@@ -21,9 +21,9 @@ def imput(pin1 = None,pin2 = None,pin3 = None,pin4 = None,pin5 = None,pin6 = Non
             for input in inputs:
                 pin = input.pin.number
                 if input.value == 1:
-                    mem.buf[pin] = 0
-                else:
                     mem.buf[pin] = 1
+                else:
+                    mem.buf[pin] = 0
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

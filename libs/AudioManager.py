@@ -94,9 +94,14 @@ def audio_recive():
 def play_tone(number: int):
     dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
     odir = '/home/FuegoAustral/Metaphone/Audios/tone/number/'  
-    dir = odir + dirs[number]
-    Play(dir)
-    return
+    mem = SharedMemory(name = "Memory")
+    while True:
+        tono = mem.buf[0]
+        if tono == 11:
+            continue
+        else:
+            dir = odir + dirs[number]
+            Play(dir)
     
 def audio_message(code: str = None):
     """Plays a message, if code not given will play random, otherwise the code, if it doesn't exist returns false
@@ -114,6 +119,7 @@ def audio_message(code: str = None):
         code = random.choice(listdir)
         coder = code[:-4]
     else:
+        coder = code[:-4]
         if not code in listdir:
             print(code)
             print(listdir)
@@ -122,7 +128,6 @@ def audio_message(code: str = None):
     tone_beep()
     time.sleep(0.1)
     directory = dir + '/' + code
-    print(coder)
     Play(directory, 0, int(coder))
     return True
 
@@ -138,7 +143,7 @@ def audio_finish():
 
 
 def record(max_time = 60, name: str = None):
-    a = SharedMemory(name="Memory", create=False)
+    mem = SharedMemory(name="Memory", create=False)
     j = True
     rec = Recorder()
     tone_beep()
@@ -147,14 +152,11 @@ def record(max_time = 60, name: str = None):
         name = filename()
     finish_time = time.time() + max_time
     while j == True:
-        f = a.buf[0]
+        f = mem.buf[0]
         if time.time() >= finish_time:
             j = False
-        elif f == Stop_Record_Key:
+        elif f == Stop_Record_Key or mem.buf[11] == 0:
             j = False
-        elif a.buf[11] == 1:
-            rec.stop()
-            rec.save(str(name))
     rec.stop()
     rec.save(str(name))
     return name
