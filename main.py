@@ -25,8 +25,8 @@ def start_keypad():
     while True:
         time.sleep(0.01)
         if number.buf[0] != 11:
-            # play_tone(number.buf[0])
-            print(number.buf[0])
+            play_tone(number.buf[0])
+            # print(number.buf[0])
             time.sleep(0.0005)
             number.buf[0] = 11
 
@@ -51,7 +51,7 @@ def code_main(retry = True):
     if a == False and retry == True:
         code_main(False)
     if retry == False:
-        finish(False) 
+        finish() 
 
 def welcome():
     welcome = Process(target=audio_welcome, name = "Options")
@@ -92,35 +92,29 @@ def welcome():
             except:
                 continue
             code_main()
-    finish(False)
+    finish()
 
-def finish(kill = True):
-    """Finish all process and play goodbye audio.""" 
-    key = SharedMemory(name="Memory", create=False) 
-    notkill = ["Keypad", "Inputs", "Movement", "Positions","Outputs"]
+def finish(ool = False):
+    mem = SharedMemory(name="Memory", create=False) 
     finishing = Process(target=audio_finish, name= "Finisher")
-    if key.buf[11] == 1:
-        if kill == False:
-            notkill.append("Finisher")
-        finishing.start()
+    tonofuera = Process(target=tone_ool, name = "Fuera")
+    rotacion = 0
+    while mem.buf[11] == 1:
+        if rotacion == 0:
+            rotacion = 1
+            finishing.start()
+            finishing.join()
+        else:
+            tonofuera.start()
+            tonofuera.join()
+
+def killprocess():
+    notkill = ["Keypad", "Inputs", "Movement", "Positions", "Outputs"]
     for p in active_children():
         if not p.name in notkill:
             print(p.name)
             p.terminate()
-    if kill == False:
-        try:
-            finishing.join()
-        except: 
-            ...
-    while key.buf[11] == 1:
-        # rotations += 1
-        # if rotations != 4:
-        #     tone_busy()
-        #     time.sleep(1)
-        # else:
-            tone_ool()
-        
-        
+
 
 if __name__ == "__main__":
     mem = SharedMemory(name = "Memory", create=True, size = 1000)
@@ -135,26 +129,27 @@ if __name__ == "__main__":
     outs.start()
     position.start()
     hanged = 1
+    time.sleep(5)
     while True:
-        print()
         if mem.buf[40] == 0:
-            if mem.buf[11] == 1 and hanged == 1:
+            if mem.buf[11] == 0 and hanged == 1:
+                hanged = 0
                 j = 0
                 i = random.randint(2, 5)
                 i = 0 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
                 while j < i:
                     j+=1
-                    if mem.buf[11] == 0:
+                    if mem.buf[11] == 1:
+                        hanged = 1
                         break
                     else:
                         tone_dialing()
                         time.sleep(0.5) 
                 welcomer = Process(target=welcome)
-                hanged = 0
                 welcomer.start()
-            if mem.buf[11] == 0 and hanged == 0:
-                hanged = 0
-                finish(True)
+            if mem.buf[11] == 1:
+                hanged = 1
+                killprocess()
         elif mem.buf[40] == 1:
             while mem.buf[11] == 0:
                 tone_ool()

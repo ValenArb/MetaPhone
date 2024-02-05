@@ -21,7 +21,6 @@ def tone_beep():
 def tone_ool():
     dir = '/home/FuegoAustral/Metaphone/Audios/tone/off-hook.wav'
     Play(dir)
-    return
 
 
 def tone_busy():
@@ -113,7 +112,7 @@ def audio_message(code: str = None):
     listdir = os.listdir(dir)
     if code == None:
         code = random.choice(listdir)
-        coder = code[:-3]
+        coder = code[:-4]
     else:
         if not code in listdir:
             print(code)
@@ -123,7 +122,8 @@ def audio_message(code: str = None):
     tone_beep()
     time.sleep(0.1)
     directory = dir + '/' + code
-    Play(directory, 0, coder)
+    print(coder)
+    Play(directory, 0, int(coder))
     return True
 
 def audio_code():
@@ -134,8 +134,7 @@ def audio_code():
 def audio_finish():
     """Plays the finishing audio"""
     dir = '/home/FuegoAustral/Metaphone/Audios/General/Salir.wav'
-    Play(dir) 
-    return
+    Play(dir)
 
 
 def record(max_time = 60, name: str = None):

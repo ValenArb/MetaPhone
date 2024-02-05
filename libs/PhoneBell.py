@@ -29,25 +29,17 @@ def select():
     status = 10
     while True:
         poscion1 = mem.buf[6]
-        poscion2 = mem.buf[5]
-        if poscion1 == 0 and poscion2 == 0:
+        if poscion1 == 0:
             mem.buf[40] = 1
             output(17, False)
             output(27, True)
             if status !=0 :
                 print("Fuera de linea")
                 status = 0
-        elif poscion1 == 1:
+        else:
             mem.buf[40] = 0
             output(17, True)
             output(27, False)
             if status !=1 :
                 print("Funcionando")
                 status = 1
-        elif poscion2 == 1:
-            mem.buf[40] = 2
-            output(17, True)
-            output(27, True)
-            if status !=2 :
-                print("Mantenimiento")
-                status = 2
