@@ -15,6 +15,7 @@ def Matrix():
     row_inputs = [DigitalInputDevice(pin=pin ,active_state=False, pull_up=None) for pin in row_pins]
     try:
         while True:
+            time.sleep(0.005)
             # Scan each column
             for i, col_output in enumerate(col_outputs):
                 col_output.on()

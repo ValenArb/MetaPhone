@@ -109,10 +109,11 @@ def audio_message(code: str = None):
         False: The code given doesn't exist
     """
     notfound = '/home/FuegoAustral/Metaphone/Audios/General/NoCode.wav'
-    dir = '/home/peima/FTP/test/recordings'
+    dir = '/home/FuegoAustral/Metaphone/recordings'
     listdir = os.listdir(dir)
     if code == None:
         code = random.choice(listdir)
+        coder = code[:-3]
     else:
         if not code in listdir:
             print(code)
@@ -121,7 +122,8 @@ def audio_message(code: str = None):
             return False
     tone_beep()
     time.sleep(0.1)
-    Play(dir + '/' + code)
+    directory = dir + '/' + code
+    Play(directory, 0, coder)
     return True
 
 def audio_code():

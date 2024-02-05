@@ -5,3 +5,10 @@ cogs/__pycache__/Players.cpython-312.pyc
 libs/sub_libs/__pycache__/ignore.cpython-312.pyc
 libs/sub_libs/__pycache__/Player.cpython-312.pyc
 libs/__pycache__/Players.cpython-312.pyc
+__pycache__/variables.cpython-312.pyc
+libs/__pycache__/AudioManager.cpython-312.pyc
+libs/__pycache__/Matrix.cpython-312.pyc
+libs/__pycache__/PhoneBell.cpython-312.pyc
+libs/sub_libs/__pycache__/file.cpython-312.pyc
+libs/sub_libs/__pycache__/Recorder.cpython-312.pyc
+libs/sub_libs/__pycache__/Signals.cpython-312.pyc

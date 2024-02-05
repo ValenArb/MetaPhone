@@ -4,7 +4,11 @@ from libs.sub_libs.ignore import noalsaerr
 import numpy as np
 from variables import *
 
-def Player(file_name):
+def Player(file_name, type = 1, coder = None):
+    if type == 1 or coder <= 19:
+        Volume_Multiplier = Audio_Multiplier
+    else:
+        Volume_Multiplier = Recording_Multiplier
     # Make sure the user is reading a wav file
     if (file_name[-4:] != ".wav"):
         wf = wave.open(file_name + ".wav", "rb")

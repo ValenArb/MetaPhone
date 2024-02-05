@@ -6,6 +6,7 @@ import time
 def imput(pin1 = None,pin2 = None,pin3 = None,pin4 = None,pin5 = None,pin6 = None,pin7 = None):
     pins = [pin1, pin2, pin3, pin4, pin5, pin6, pin7]
     j= True
+    inputs = []
     while j == True:
         if None in pins:
             pins.remove(None)
@@ -14,22 +15,47 @@ def imput(pin1 = None,pin2 = None,pin3 = None,pin4 = None,pin5 = None,pin6 = Non
     mem = SharedMemory(name= "Memory", create= False)
     for pin in pins:
         input = DigitalInputDevice(pin=pin)
-        if input.value == 1:
-            mem.buf[pin] = 1
-        else:
-            mem.buf[pin] = 0
-                
+        inputs.append(input)
+    while True:
+        for input in inputs:
+            pin = input.pin.number
+            if input.value == 1:
+                mem.buf[pin] = 1
+            else:
+                mem.buf[pin] = 0               
 
-def output(pin, status: bool):
-    out = DigitalOutputDevice(pin = pin)
+def outbut(pin1 = None,pin2 = None,pin3 = None,pin4 = None,pin5 = None,pin6 = None,pin7 = None):
+    pins = [pin1, pin2, pin3, pin4, pin5, pin6, pin7]
+    j = True
+    while j == True:
+        if None in pins:
+            pins.remove(None)
+        else:
+            j = False
+    outputs = []
+    mem = SharedMemory(name="Memory", create= False)
+    for pin in pins:
+        outputed = DigitalOutputDevice(pin = pin)
+        outputs.append(outputed)
+    while True:
+        for i in outputs:
+            pin = i.pin.number
+            value = mem.buf[int(pin)]
+            if value == 1:
+                try:
+                    i.on()
+                except:
+                    ...
+            else:
+                try:
+                    i.off()
+                except:
+                    ...
+
+def output(pin: int, status: bool):
+    mem = SharedMemory(name="Memory", create= False)
     if status == True:
-        try:
-            out.on()    
-        except:
-            ...
+        mem.buf[pin] = 1
     else:
-        try:            
-            out.off() 
-        except:
-            ...
+        mem.buf[pin] = 0
     return
