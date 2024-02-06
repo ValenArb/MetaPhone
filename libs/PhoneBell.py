@@ -5,41 +5,46 @@ from libs.sub_libs.Signals import *
 
 def ring():
     mem = SharedMemory(name= "Memory", create = False)
+    time.sleep(10)
     while True:
-        sensor1 = mem.buf[23]
-        sensor2 = mem.buf[24]
-        if sensor1 == 1 or sensor2 == 1:
-            cycle = 0
-            while cycle < 5:
+        cycle = 0
+        while cycle < 5:
                 output(18, True)
-                if mem.buf[11] == 0:
+                if mem.buf[11] == 1:
                     cycle == 60
                 else:
-                    time.sleep(3)
+                    time.sleep(1,5)
                     output(18, False)
-                    time.sleep(1)
+                    time.sleep(3)
                     cycle += 1
-        if mem.buf[11] == 1:
-            output(17, True)
-        else:
-            output(17, False)
+        time.sleep(600)
                     
 def select():
     mem = SharedMemory(name="Memory", create = False)
-    status = 10
+    a = 0
     while True:
         poscion1 = mem.buf[6]
+        poscion2 = mem.buf[5]
         if poscion1 == 0:
-            mem.buf[40] = 1
-            output(17, False)
-            output(27, True)
-            if status !=0 :
-                print("Fuera de linea")
-                status = 0
-        else:
+            # print("Estado 1")
+            if mem.buf[0] != 11:
+                output(17, True)
+                time.sleep(0.5)
+                output(17, False)
             mem.buf[40] = 0
+            if a == 0:
+                output(17, False)
+                output(27, False)
+                a = 1
+        elif poscion2 == 0:
+            # print("Estado 2")
+            a = 0
+            mem.buf[40] = 1
             output(17, True)
             output(27, False)
-            if status !=1 :
-                print("Funcionando")
-                status = 1
+        else: 
+            a = 0
+            mem.buf[40] = 2
+            # print("Estado centrico")
+            output(17, True)
+            output(27, True)

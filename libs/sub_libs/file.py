@@ -2,7 +2,7 @@ import os
 
 def filename():
     """Returns the first available number in the recordings folder"""
-    files = os.listdir('/home/peima/FTP/test/recordings')
+    files = os.listdir('/home/FuegoAustral/Metaphone/recordings')
     wav_files = []
     for f in files:
         if f.endswith('.wav'):

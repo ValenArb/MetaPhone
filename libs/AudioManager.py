@@ -59,9 +59,9 @@ def audio_record(re = False):
         file = random.choice(os.listdir(dir))
         dir = dir + '/' + file
     dir2 = '/home/FuegoAustral/Metaphone/Audios/General/Grabacion.wav'
-    Play(dir)
-    time.sleep(0.5)
     Play(dir2)
+    time.sleep(0.5)
+    Play(dir)
     return
 
 def audio_re_record():
@@ -91,7 +91,7 @@ def audio_recive():
     Play(dir)
     return
     
-def play_tone(number: int):
+def play_tone(number: int = 0):
     dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
     odir = '/home/FuegoAustral/Metaphone/Audios/tone/number/'  
     mem = SharedMemory(name = "Memory")
@@ -100,7 +100,7 @@ def play_tone(number: int):
         if tono == 11:
             continue
         else:
-            dir = odir + dirs[number]
+            dir = odir + dirs[tono]
             Play(dir)
     
 def audio_message(code: str = None):
@@ -155,7 +155,9 @@ def record(max_time = 60, name: str = None):
         f = mem.buf[0]
         if time.time() >= finish_time:
             j = False
-        elif f == Stop_Record_Key or mem.buf[11] == 0:
+        elif f == Stop_Record_Key:
+            j = False
+        elif mem.buf[11] == 1:
             j = False
     rec.stop()
     rec.save(str(name))
@@ -169,7 +171,7 @@ def recorder_main(again = False, name = None):
     if again == False:
         j = True
         audio_re_record()
-        endtime = time.time() + Max_Timeout_Record_Menu
+        endtime = time.time() + Max_Timeout_Record_Menu + 5
         while j == True:
             if key.buf[0] == Retry_Record_Key:
                 j = False

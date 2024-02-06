@@ -25,8 +25,8 @@ class Recorder():
         self._running = True
         self._frames = []
         #Create pyaudio instance
-        with noalsaerr():
-            p = pyaudio.PyAudio()
+        # with noalsaerr():
+        p = pyaudio.PyAudio()
         #Open stream
         stream = p.open(format=self.FORMAT,
                         channels=self.CHANNELS,
@@ -36,7 +36,7 @@ class Recorder():
         # To stop the streaming, new thread has to set self._running to false
         # append frames array while recording
         while(self._running):
-            data = stream.read(self.CHUNK)
+            data = stream.read(self.CHUNK, exception_on_overflow = False)
             self._frames.append(data)
 
         # Interrupted, stop stream and close it. Terinate pyaudio process.
@@ -50,8 +50,8 @@ class Recorder():
 
     #Save file to filename location as a wavefront file.
     def save(self, filename):
-        with noalsaerr():
-            p = pyaudio.PyAudio()
+        # with noalsaerr():
+        p = pyaudio.PyAudio()
         if not filename.endswith(".wav"):
             filename = filename + ".wav"
         wf = wave.open(filename, 'wb')
@@ -60,8 +60,8 @@ class Recorder():
         wf.setframerate(self.RATE)
         wf.writeframes(b''.join(self._frames))
         wf.close()
-        src_dir = "/home/peima/FTP/test"
-        dst_dir = "/home/peima/FTP/test/recordings"
+        src_dir = "/home/FuegoAustral/Metaphone"
+        dst_dir = "/home/FuegoAustral/Metaphone/recordings"
         src_file= os.path.join(src_dir, filename)
         dst_file= os.path.join(dst_dir, filename)
         shutil.move(src_file,dst_file)
