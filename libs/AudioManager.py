@@ -149,6 +149,7 @@ def audio_finish():
 
 def record(max_time = 60, name: str = None):
     mem = SharedMemory(name="Memory", create=False)
+    mem.buf[143] = 1
     j = True
     rec = Recorder()
     tone_beep()
@@ -166,6 +167,7 @@ def record(max_time = 60, name: str = None):
     rec.stop()
     rec.save(str(name))
     finished = time.time()
+    mem.buf[143] = 0
     return name, finished
 
 def recorder_main(again = False, name = None):

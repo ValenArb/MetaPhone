@@ -7,26 +7,29 @@ from variables import *
 def ring():
     mem = SharedMemory(name= "Memory", create = False)
     j = 0
-    time.sleep(1)
     cycle = 0
     start_at = 0
     while True:
+        time.sleep(1)
         if mem.buf[40] == 0:
             if mem.buf[11] == 1:
                 cycle = 0
                 while start_at > time.time():
+                    mem.buf[200] = 0
                     time.sleep(1)
-                    print(f"Tiempo restante: {start_at-time.time()}")
+                    print(f"Tiempo restante: {round(start_at-time.time())} s ")
                     if mem.buf[11] == 0:
                         cycle = 300
                         start_at = 0
                     elif not mem.buf[40] == 0:
                         cycle = 300
                         start_at = 0
-                    ...
                 while cycle < 5:
+                    mem.buf[200] = 1
                     if mem.buf[11] == 0:
                         cycle = 300
+                        time.sleep(0.5)
+                        mem.buf[200] = 0
                         break
                     if mem.buf[11] == 1:
                         output(12, True)

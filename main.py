@@ -32,7 +32,7 @@ def code_main(retry = True):
     tones = Process(target = play_tone, name = "Tones")
     key = SharedMemory(name="Memory", create=False)
     keypress = []
-    endtime = time.time() + Max_Timeout_Code_Keypress + 1
+    endtime = time.time() + Max_Timeout_Code_Keypress + 2
     tone_beep()
     tones.start()
     while endtime >= time.time():
@@ -104,10 +104,14 @@ def tono_ool():
         tone_ool()
 
 def killprocess():
-    notkill = ["Keypad", "Inputs", "Campanilla", "Positions", "Outputs"]
-    for p in active_children():
-        if not p.name in notkill:
-            p.terminate()
+    mem = SharedMemory(name = "Memory")
+    while mem.buf[143] == 1:
+        ...
+    if mem.buf [143] == 0:
+        notkill = ["Keypad", "Inputs", "Campanilla", "Positions", "Outputs"]
+        for p in active_children():
+            if not p.name in notkill:
+                p.terminate()
 
 
 if __name__ == "__main__":
@@ -137,6 +141,11 @@ if __name__ == "__main__":
                 # i = 1 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
                 while j <= i:
                     j+=1
+                    if mem.buf[200] == 1:
+                        j = 10
+                        time.sleep(1)
+                        tone_beep()
+                        break
                     if mem.buf[11] == 1 or mem.buf[40] != 0:
                         hanged = 1
                         j = 10
