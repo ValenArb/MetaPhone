@@ -58,16 +58,20 @@ def audio_record(re = False):
         dir = '/home/FuegoAustral/Metaphone/Audios/Preguntas'
         file = random.choice(os.listdir(dir))
         dir = dir + '/' + file
-    dir2 = '/home/FuegoAustral/Metaphone/Audios/General/Grabacion.wav'
-    Play(dir2)
-    time.sleep(0.5)
-    Play(dir)
-    return
+        dir2 = '/home/FuegoAustral/Metaphone/Audios/General/Grabacion.wav'
+        Play(dir2)
+        time.sleep(0.5)
+        Play(dir)
+        return
+    else:
+        dir = '/home/FuegoAustral/Metaphone/Audios/General/Grabar2.wav'
+        Play(dir)
+        return
 
 def audio_re_record():
     """Plays the re record message"""
     dir = '/home/FuegoAustral/Metaphone/Audios/General/FinGrabar.wav'
-    Play(dir) 
+    Play(dir)
     return
 
 def audio_record_finish():
@@ -96,14 +100,11 @@ def play_tone(number: int = 0):
     odir = '/home/FuegoAustral/Metaphone/Audios/tone/number/'  
     mem = SharedMemory(name = "Memory")
     while True:
-        tono = mem.buf[0]
-        if tono == 11:
-            continue
-        else:
-            dir = odir + dirs[tono]
+        if not mem.buf[0] == 11:
+            dir = odir + dirs[mem.buf[0]]
             Play(dir)
     
-def audio_message(code: str = None):
+def audio_message(code: str = None, notplay = None):
     """Plays a message, if code not given will play random, otherwise the code, if it doesn't exist returns false
 
     Args:
@@ -115,9 +116,13 @@ def audio_message(code: str = None):
     notfound = '/home/FuegoAustral/Metaphone/Audios/General/NoCode.wav'
     dir = '/home/FuegoAustral/Metaphone/recordings'
     listdir = os.listdir(dir)
+    j = True
     if code == None:
-        code = random.choice(listdir)
-        coder = code[:-4]
+        while j == True:
+            code = random.choice(listdir)
+            coder = code[:-4]
+            if not coder == notplay:
+                j = False
     else:
         coder = code[:-4]
         if not code in listdir:
@@ -152,31 +157,31 @@ def record(max_time = 60, name: str = None):
         name = filename()
     finish_time = time.time() + max_time
     while j == True:
-        f = mem.buf[0]
         if time.time() >= finish_time:
             j = False
-        elif f == Stop_Record_Key:
+        elif mem.buf[0] == Stop_Record_Key:
             j = False
         elif mem.buf[11] == 1:
             j = False
     rec.stop()
     rec.save(str(name))
-    return name
+    finished = time.time()
+    return name, finished
 
 def recorder_main(again = False, name = None):
     audio_record(again)
     time.sleep(0.5)
     key = SharedMemory(name="Memory", create=False)
-    name = record(max_time=Max_Record_Time, name= name)
+    name, finished = record(max_time=Max_Record_Time, name= name)
     if again == False:
         j = True
         audio_re_record()
-        endtime = time.time() + Max_Timeout_Record_Menu + 5
+        endtime = finished + Max_Timeout_Record_Menu
         while j == True:
+            if endtime < time.time():
+                j = False
             if key.buf[0] == Retry_Record_Key:
                 recorder_main(again = True, name = name)
-                j = False
-            elif endtime >= time.time():
                 j = False
         time.sleep(0.5)
         audio_record_finish()
@@ -186,4 +191,4 @@ def recorder_main(again = False, name = None):
         time.sleep(1)
         audio_recive()
         time.sleep(0.5)
-        audio_message()
+        audio_message( notplay = name)
