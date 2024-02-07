@@ -174,8 +174,8 @@ def recorder_main(again = False, name = None):
         endtime = time.time() + Max_Timeout_Record_Menu + 5
         while j == True:
             if key.buf[0] == Retry_Record_Key:
-                j = False
                 recorder_main(again = True, name = name)
+                j = False
             elif endtime >= time.time():
                 j = False
         time.sleep(0.5)

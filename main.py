@@ -131,7 +131,7 @@ if __name__ == "__main__":
     ins = Process(target = imput, name = "Inputs", args=(5,23,24,11,6))
     outs = Process(target = outbut, name = "Outputs", args=(18,12,27,17))
     position = Process(target = select, name = "Positions")
-    # tones.start()
+    movement.start()
     ins.start()
     outs.start()
     position.start()
@@ -142,13 +142,12 @@ if __name__ == "__main__":
     while True:
         if mem.buf[40] == 0:
             ta = 0
-            # print(mem.buf[11])
             if mem.buf[11] == 0 and hanged == 1:
                 dead = 0
                 hanged = 0
                 j = 0
-                i = random.randint(1, 4)
-                i = 1 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
+                i = random.randint(1, 2)
+                # i = 1 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
                 while j <= i:
                     j+=1
                     if mem.buf[11] == 1 or mem.buf[40] != 0:

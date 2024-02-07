@@ -53,7 +53,7 @@ def outbut(pin1 = None,pin2 = None,pin3 = None,pin4 = None,pin5 = None,pin6 = No
                         i.on()
                     except:
                         ...
-                else:
+                elif value == 0:
                     try:
                         i.off()
                     except:
