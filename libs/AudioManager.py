@@ -15,6 +15,8 @@ def tone_dialing(times = 1):
         Play(dir)
         time.sleep(0.5)
         played += 1
+    mem = SharedMemory(name = "Memory")
+    mem.buf[255] = 1
     return
 
 def tone_beep():

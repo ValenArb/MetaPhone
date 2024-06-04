@@ -144,8 +144,11 @@ if __name__ == "__main__":
                 if mem.buf[11] == 1 or mem.buf[40] != 0:
                     hanged = 1
                 else:
+                    mem.buf[255] = 0
                     dialer = Process(target=tone_dialing, args= i)
                     dialer.start()
+                    while mem.buf[255] == 0:
+                        time.sleep(0.5)
                 welcomer = Process(target=welcome)
                 welcomer.start()
             if mem.buf[11] == 1:
