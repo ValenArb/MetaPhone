@@ -136,21 +136,16 @@ if __name__ == "__main__":
             ta = 0
             if mem.buf[11] == 0 and hanged == 1:
                 hanged = 0
-                j = 0
                 i = random.randint(1, 2)
                 # i = 1 #TODO COMMENT THIS LINE WHEN CODE FINISHED TESTING
-                while j <= i:
-                    j+=1
-                    if mem.buf[200] == 1:
-                        j = 10
-                        time.sleep(1)
-                        tone_beep()
-                        break
-                    if mem.buf[11] == 1 or mem.buf[40] != 0:
-                        hanged = 1
-                        j = 10
-                    else:
-                        tone_dialing()
+                if mem.buf[200] == 1:
+                    time.sleep(1)
+                    tone_beep()
+                if mem.buf[11] == 1 or mem.buf[40] != 0:
+                    hanged = 1
+                else:
+                    dialer = Process(target=tone_dialing, args= i)
+                    dialer.start()
                 welcomer = Process(target=welcome)
                 welcomer.start()
             if mem.buf[11] == 1:

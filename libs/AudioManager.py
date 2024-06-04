@@ -7,24 +7,28 @@ import time
 import random
 import os
 
-def tone_dialing():
+def tone_dialing(times = 1):
     """Plays the dialing tone"""
-    dir = '/home/FuegoAustral/Metaphone/Audios/tone/dial.wav'
-    Play(dir) 
+    dir = '/home/FuegoAustral/Metaphone/Tones/dial.wav'
+    played = 0
+    while played < times:
+        Play(dir)
+        time.sleep(0.5)
+        played += 1
     return
 
 def tone_beep():
     """Play the beep tone"""
-    dir = '/home/FuegoAustral/Metaphone/Audios/tone/beep.wav'
+    dir = '/home/FuegoAustral/Metaphone/Tones/beep.wav'
     Play(dir)
 
 def tone_ool():
-    dir = '/home/FuegoAustral/Metaphone/Audios/tone/off-hook.wav'
+    dir = '/home/FuegoAustral/Metaphone/Tones/off-hook.wav'
     Play(dir)
 
 
 def tone_busy():
-    dir = '/home/FuegoAustral/Metaphone/Audios/tone/busy.wav'
+    dir = '/home/FuegoAustral/Metaphone/Tones/busy.wav'
     Play(dir)
     return
 
@@ -97,7 +101,7 @@ def audio_recive():
     
 def play_tone(number: int = 0):
     dirs = ['tone0.wav', 'tone1.wav', 'tone2.wav', 'tone3.wav', 'tone4.wav', 'tone5.wav', 'tone6.wav', 'tone7.wav', 'tone8.wav', 'tone9.wav']
-    odir = '/home/FuegoAustral/Metaphone/Audios/tone/number/'  
+    odir = '/home/FuegoAustral/Metaphone/Tones/number/'  
     mem = SharedMemory(name = "Memory")
     while True:
         if not mem.buf[0] == 11:
